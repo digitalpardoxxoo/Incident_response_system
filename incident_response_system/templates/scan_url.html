@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Scan Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="scanner-container">
+        {% if session.get('user_id') %}
+            <h2>🔍 Scan a Website for Vulnerabilities</h2>
+
+            <form method="POST">
+                <input type="text" name="url" placeholder="Enter website URL" required>
+                <button type="submit">Scan Now</button>
+            </form>
+
+            {% if results %}
+                <h3>Results:</h3>
+                {% for item in results %}
+                    <div class="vulnerability-result">
+                        <strong>{{ item.title }}</strong><br>
+                        {{ item.description }}<br>
+                        <span class="priority-tag priority-{{ item.priority|lower }}">{{ item.priority }}</span>
+                    </div>
+                {% endfor %}
+
+                <br><a href="{{ url_for('report') }}">📝 Now fill the incident report</a>
+            {% endif %}
+        {% else %}
+            <h2>⚠️ Access Denied</h2>
+            <p>You need to <a href="{{ url_for('login') }}">login</a> to use the scanner.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

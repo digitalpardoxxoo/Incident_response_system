@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Your Submitted Incidents</h1>
+
+    <!-- PIE CHART BOX -->
+    <div class="dashboard-container">
+        <h2>📊 Incident Priority Chart</h2>
+        <canvas id="priorityChart" style="max-width: 400px; margin: auto;"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('priorityChart').getContext('2d');
+        const priorityCounts = JSON.parse('{{ priority_counts | tojson | safe }}');
+
+        const priorityData = {
+            labels: ['Low', 'Medium', 'High', 'Critical'],
+            datasets: [{
+                label: 'Incident Priorities',
+                data: priorityCounts,
+                backgroundColor: ['#4CAF50', '#FFC107', '#FF5722', '#FF3B30'],
+                hoverOffset: 4
+            }]
+        };
+
+        const config = {
+            type: 'pie',
+            data: priorityData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+
+    <!-- INCIDENT LIST BOX -->
+    <div class="dashboard-container">
+        <h2>📋 Reported Incidents</h2>
+        <ul class="incident-list" style="list-style-type: none;">
+            {% for incident in incidents %}
+                <li class="incident-item">
+                    <strong>{{ incident[2] }}</strong><br>
+                    {{ incident[3] }}<br>
+                    <span class="priority-{{ incident[4] | lower }}">Priority: {{ incident[4] }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- VULNERABILITIES BOX -->
+    <div class="dashboard-container">
+        <h2>🛡️ Common Vulnerabilities & Fixes</h2>
+        <ul style="text-align: left; list-style: none; padding-left: 0;">
+            <li>
+                <strong>SQL Injection:</strong> Injecting SQL via user input.<br>
+                <em>✅ Fix:</em> Use parameterized queries:
+                <code>cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))</code>
+            </li><br>
+            <li>
+                <strong>XSS (Cross-Site Scripting):</strong> Malicious scripts in web pages.<br>
+                <em>✅ Fix:</em> Escape output using <code>{{ '{{ variable }}' }}</code> in Jinja.
+            </li><br>
+            <li>
+                <strong>Broken Authentication:</strong> Weak session handling.<br>
+                <em>✅ Fix:</em> Use Flask-Login and secure cookie settings.
+            </li><br>
+            <li>
+                <strong>CSRF:</strong> Exploits authenticated users.<br>
+                <em>✅ Fix:</em> Use Flask-WTF’s CSRF protection.
+            </li>
+        </ul>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="dashboard-nav">
+        <a href="/report">➕ Submit New Incident</a> | 
+        <a href="/scan">🔍 Go to Scan Page</a> | 
+        <a href="/export-excel">📤 Export to Excel</a> | 
+        <a href="/logout">🚪 Logout</a>
+    </div>
+
+</body>
+</html>

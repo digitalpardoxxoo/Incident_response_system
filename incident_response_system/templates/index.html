@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="intro-container">
+        <h1 id="typing-title"></h1>
+        <p id="typing-desc"></p>
+
+        <div class="button-group">
+            <a href="{{ url_for('login') }}" class="btn">Login</a>
+            <a href="{{ url_for('register') }}" class="btn">Register</a>
+        </div>
+    </div>
+
+    <script>
+        const titleText = "Welcome to Incident Management System";
+        const descText = "Track. Report. Resolve. Cyber incidents made simple.";
+
+        let titleIndex = 0;
+        let descIndex = 0;
+
+        function typeWriterTitle() {
+            if (titleIndex < titleText.length) {
+                document.getElementById("typing-title").innerHTML += titleText.charAt(titleIndex);
+                titleIndex++;
+                setTimeout(typeWriterTitle, 70);
+            } else {
+                setTimeout(typeWriterDesc, 500);
+            }
+        }
+
+        function typeWriterDesc() {
+            if (descIndex < descText.length) {
+                document.getElementById("typing-desc").innerHTML += descText.charAt(descIndex);
+                descIndex++;
+                setTimeout(typeWriterDesc, 50);
+            }
+        }
+
+        window.onload = typeWriterTitle;
+    </script>
+</body>
+
+</html>
+
+</body>
+</html>

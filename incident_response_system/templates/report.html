@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Incident</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Report Incident</h1>
+    <form method="POST">
+        <label>Title:</label>
+        <input type="text" name="title" value="{{ autofill.title if autofill }}" required><br>
+
+        <label>Description:</label>
+        <textarea name="description" required>{{ autofill.description if autofill }}</textarea><br>
+
+        <label>Priority:</label>
+        <select name="priority">
+            {% set selected_priority = autofill.priority if autofill else '' %}
+            {% for p in ['Low', 'Medium', 'High', 'Critical'] %}
+                <option value="{{ p }}" {% if p == selected_priority %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label>Category:</label>
+        <input type="text" name="category" value="{{ autofill.category if autofill }}"><br>
+
+        <label>Due Date:</label>
+        <input type="date" name="due_date" required><br>
+
+        <label>Location:</label>
+        <input type="text" name="location" value="{{ autofill.location if autofill }}"><br>
+
+        <label>Incident Type:</label>
+        <input type="text" name="incident_type" value="{{ autofill.incident_type if autofill }}"><br>
+
+        <label>Department:</label>
+        <input type="text" name="department" value="{{ autofill.department if autofill }}"><br>
+
+        <label>Impact Level:</label>
+        <select name="impact_level" required>
+            {% set selected_impact = autofill.impact_level if autofill else '' %}
+            {% for level in ['Low', 'Moderate', 'High', 'Critical'] %}
+                <option value="{{ level }}" {% if level == selected_impact %}selected{% endif %}>{{ level }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label>Actions Taken:</label>
+        <textarea name="actions_taken">{{ autofill.actions_taken if autofill }}</textarea><br>
+
+        <button type="submit">Submit Incident</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+
+    <footer>
+        <p style="margin-top: 30px;">Nova was here 😎</p>
+    </footer>
+</body>
+</html>
